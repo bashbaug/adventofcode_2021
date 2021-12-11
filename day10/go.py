@@ -3,24 +3,18 @@
 import sys
 
 def isOpener(c):
-    return c == '(' or c == '[' or c == '{' or c == '<'
+    return c in ['(', '[', '{', '<']
 
 def isCloser(c):
-    return c == ')' or c == ']' or c == '}' or c == '>'
+    return c in [')', ']', '}', '>']
 
 def getMatch(c):
-    match = ')' if c == '(' else 'X'
-    match = ']' if c == '[' else match
-    match = '}' if c == '{' else match
-    match = '>' if c == '<' else match
-    return match
+    matches = {'(':')', '[':']', '{':'}', '<':'>'}
+    return matches[c]
 
 def getScore(c):
-    res = 3 if c == ')' else 0
-    res = 57 if c == ']' else res
-    res = 1197 if c == '}' else res
-    res = 25137 if c == '>' else res
-    return res
+    scores = {')':3, ']':57, '}':1197, '>':25137}
+    return scores[c]
 
 def hasCloser(line):
     for c in line:
@@ -51,13 +45,10 @@ def getSyntaxErrorPoints(line):
     return 0
 
 def getAutocompletePoints(line):
+    scores = {'(':1, '[':2, '{':3, '<':4}
     score = 0
     for c in line[::-1]:
-        score = score * 5
-        score += 1 if c == '(' else 0
-        score += 2 if c == '[' else 0
-        score += 3 if c == '{' else 0
-        score += 4 if c == '<' else 0
+        score = score * 5 + scores[c]
     return score
 
 if __name__ == "__main__":
